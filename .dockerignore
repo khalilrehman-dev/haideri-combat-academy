@@ -1,0 +1,10 @@
+.git
+brand-assets
+preview
+content
+tools
+templates
+*.md
+*.bat
+*.sh
+__pycache__

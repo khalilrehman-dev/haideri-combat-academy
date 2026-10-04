@@ -6,16 +6,23 @@
 :{$PORT:3000} {
   root * /srv
   encode zstd gzip
-  file_server
 
-  @assets path /assets/* *.css *.js *.svg *.jpg *.jpeg *.png *.webp *.avif
-  header @assets Cache-Control "public, max-age=604800, immutable"
+  @html path / *.html /robots.txt /sitemap.xml /site.webmanifest
+  header @html Cache-Control "no-cache"
+  @static path /assets/* /favicon.ico
+  header @static Cache-Control "public, max-age=3600, must-revalidate"
 
   header {
     X-Content-Type-Options "nosniff"
     Referrer-Policy "strict-origin-when-cross-origin"
     X-Frame-Options "SAMEORIGIN"
     Permissions-Policy "camera=(), microphone=(), geolocation=()"
-    Content-Security-Policy "default-src 'self'; img-src 'self' data: https:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; script-src 'self'; frame-src https://www.youtube.com https://www.youtube-nocookie.com; connect-src 'self'; base-uri 'self'; form-action 'self'; frame-ancestors 'self';"
+    Content-Security-Policy "default-src 'self'; img-src 'self' data: https:; media-src 'self' https:; style-src 'self' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; script-src 'self'; frame-src https://www.youtube-nocookie.com https://www.youtube.com; connect-src 'self'; base-uri 'self'; form-action https://wa.me; frame-ancestors 'self'; object-src 'none';"
+  }
+
+  file_server
+  handle_errors {
+    rewrite * /404.html
+    file_server
   }
 }
